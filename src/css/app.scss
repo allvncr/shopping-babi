@@ -1,0 +1,50 @@
+// app global css in SCSS form
+
+@font-face {
+  font-family: 'FunnelDisplay';
+  src: url('../assets/fonts/FunnelDisplay-Regular.ttf') format('truetype');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'FunnelDisplay';
+  src: url('../assets/fonts/FunnelDisplay-Medium.ttf') format('truetype');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'FunnelDisplay';
+  src: url('../assets/fonts/FunnelDisplay-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'FunnelDisplay';
+  src: url('../assets/fonts/FunnelDisplay-Bold.ttf') format('truetype');
+  font-weight: 700;
+}
+@font-face {
+  font-family: 'FunnelDisplay';
+  src: url('../assets/fonts/FunnelDisplay-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+}
+
+body {
+  font-family: $body-font-family;
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.q-tab {
+  .q-icon {
+    font-size: 18px; /* Réduit la taille des icônes */
+  }
+  .q-tab__label {
+    font-size: 10px; /* Réduit la taille du texte */
+    text-transform: capitalize;
+  }
+}
+
+.q-item__section--main {
+  flex: auto;
+}

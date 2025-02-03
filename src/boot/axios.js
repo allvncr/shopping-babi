@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useAuthStore } from 'src/stores/authStore'
 
 // Créer une instance Axios
-const api = axios.create({ baseURL: 'http://localhost:3000/api' })
+const api = axios.create({ baseURL: 'https://shoppingback-uqv1.onrender.com/api' })
 
 export default defineBoot(({ app }) => {
   const authStore = useAuthStore()

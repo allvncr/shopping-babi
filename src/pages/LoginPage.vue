@@ -1,6 +1,7 @@
 <template>
   <q-page class="flex flex-center bg-grey-2">
     <q-card class="q-pa-md shadow-2 rounded-borders">
+      <img src="../assets/images/logo_officiel.png" alt="" class="logoEta" />
       <q-card-section>
         <div class="text-h5 text-bold text-dark text-center">Se connecter</div>
       </q-card-section>
@@ -87,3 +88,10 @@ const handleLogin = async () => {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.logoEta {
+  width: 144px;
+  margin: auto;
+}
+</style>

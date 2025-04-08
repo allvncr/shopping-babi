@@ -1,8 +1,8 @@
 {
-  "name": "shopping-babi",
+  "name": "reserva-babi",
   "version": "0.0.1",
   "description": "Application de reservation",
-  "productName": "Shopping@Babi",
+  "productName": "Reserv@Babi",
   "author": "allvncr <ablovianney7@gmail.com>",
   "type": "module",
   "private": true,

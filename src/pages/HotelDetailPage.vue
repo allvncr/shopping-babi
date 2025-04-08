@@ -83,24 +83,10 @@
 
       <q-separator />
 
-      <!-- Horaires -->
+      <!-- Capacité -->
       <q-card-section v-if="hotel">
-        <div class="text-weight-bold">Horaires</div>
-        <div class="text-caption">
-          {{ hotel.openingHours.start }} - {{ hotel.openingHours.end }}
-        </div>
-      </q-card-section>
-
-      <q-separator />
-
-      <!-- Types de chambres -->
-      <q-card-section v-if="hotel">
-        <div class="text-weight-bold">Types de chambres</div>
-        <div class="text-caption">
-          <ul>
-            <li v-for="(room, index) in hotel.roomTypes" :key="index">{{ room }}</li>
-          </ul>
-        </div>
+        <div class="text-weight-bold">Capacité d'accueil</div>
+        <div class="text-caption">{{ hotel.capacity }} personnes</div>
       </q-card-section>
 
       <q-separator />
@@ -148,7 +134,69 @@
             </q-item-section>
           </q-item>
         </div>
-        <q-btn label="Réserver" color="primary" unelevated class="full-width" @click="onReserve" />
+        <q-btn
+          label="Réserver"
+          color="primary"
+          unelevated
+          class="full-width"
+          @click="showReservationPopup = true"
+        />
+
+        <!-- Boîte de dialogue pour réservation -->
+        <q-dialog full-width v-model="showReservationPopup">
+          <q-card>
+            <q-card-section>
+              <div class="text-h6">Réserver cette maison</div>
+            </q-card-section>
+
+            <q-separator />
+
+            <q-card-section>
+              <q-form @submit="submitReservation">
+                <q-input
+                  v-model="reservation.startDate"
+                  type="date"
+                  mask="####-##-##"
+                  label="Date d’arrivée"
+                  outlined
+                  required
+                  class="q-mt-md"
+                />
+                <q-input
+                  v-model="reservation.endDate"
+                  type="date"
+                  mask="####-##-##"
+                  label="Date de départ"
+                  outlined
+                  required
+                  class="q-mt-md"
+                />
+
+                <q-input
+                  v-model="reservation.additionalInfo"
+                  type="textarea"
+                  label="Informations supplémentaires (facultatif)"
+                  outlined
+                  class="q-mt-md"
+                />
+
+                <div class="q-mt-md">
+                  <q-btn
+                    type="submit"
+                    label="Confirmer"
+                    color="primary"
+                    unelevated
+                    class="full-width"
+                  />
+                </div>
+              </q-form>
+            </q-card-section>
+
+            <q-card-actions align="right">
+              <q-btn flat label="Annuler" color="secondary" @click="showReservationPopup = false" />
+            </q-card-actions>
+          </q-card>
+        </q-dialog>
       </q-card-section>
     </div>
   </q-page>
@@ -158,11 +206,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEstablishmentStore } from 'src/stores/establishmentStore'
+import { useReservationStore } from 'src/stores/reservationStore'
 import { useAuthStore } from 'src/stores/authStore'
 import L from 'leaflet'
+import { useQuasar } from 'quasar'
+const $q = useQuasar()
 
-const establishmentStore = useEstablishmentStore() // Store Pinia
-const authStore = useAuthStore() // Store Pinia
+const establishmentStore = useEstablishmentStore()
+const authStore = useAuthStore()
+const reservationStore = useReservationStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -170,16 +222,52 @@ const router = useRouter()
 const slide = ref(0)
 const hotel = ref(null)
 const fullscreen = ref(false)
+const showReservationPopup = ref(false)
 const mapContainer = ref(null)
 const map = ref()
 
-// Retour à la page précédente
+const reservation = ref({
+  startDate: '',
+  endDate: '',
+  additionalInfo: '',
+})
+
 const goBack = () => {
   router.back()
 }
+const submitReservation = () => {
+  // Vérifie les champs requis
+  if (!reservation.value.startDate || !reservation.value.endDate) return
 
-const onReserve = () => {
-  //   router.push(`/reservation/${hotel.value._id}`)
+  const start = new Date(reservation.value.startDate)
+  const end = new Date(reservation.value.endDate)
+
+  const diffInDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24))
+  const totalPrice = diffInDays * +hotel.value.pricePerNight
+
+  reservationStore
+    .activityReservation({
+      establishmentId: hotel.value._id,
+      establishmentType: hotel.value.type, // "MaisonDeVacance"
+      reservationDate: reservation.value.startDate,
+      price: totalPrice,
+      ...reservation.value,
+    })
+    .then(() => {
+      showReservationPopup.value = false
+      $q.dialog({
+        title: 'Réservation',
+        message: 'Réservation réussie !',
+      }).onOk(() => {
+        router.push('/panier')
+      })
+    })
+    .catch((error) => {
+      $q.dialog({
+        title: 'Erreur',
+        message: `Une erreur est survenue : ${error.message}`,
+      })
+    })
 }
 
 const createFavoris = () => {
@@ -194,13 +282,11 @@ const removeFavoris = () => {
   })
 }
 
-// Propriété calculée pour savoir si l'hôtel est un favori
 const favorite = computed(() => {
   var bool = establishmentStore.favoris.filter((fav) => fav.establishment._id === hotel.value?._id)
   return bool.length
 })
 
-// Charger les détails de l'hôtel à l'affichage de la page
 onMounted(() => {
   establishmentStore
     .fetchHotel(route.params.slug)
@@ -231,7 +317,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-/* Styles personnalisés */
 .back {
   position: absolute;
   top: 16px;

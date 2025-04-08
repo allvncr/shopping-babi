@@ -192,16 +192,6 @@
             <!-- Date -->
             <q-input v-model="reservation.date" type="date" label="Date" outlined required />
 
-            <!-- Heure -->
-            <!-- <q-input
-              v-model="reservation.time"
-              type="time"
-              label="Heure"
-              outlined
-              required
-              class="q-mt-md"
-            /> -->
-
             <!-- Nombre de personnes -->
             <q-input
               v-model="reservation.people"
@@ -267,7 +257,6 @@ const map = ref()
 
 const reservation = ref({
   date: '',
-  // time: '',
   people: '',
   additionalInfo: '',
 })

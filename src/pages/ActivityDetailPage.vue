@@ -241,9 +241,9 @@ import L from 'leaflet'
 import { useQuasar } from 'quasar'
 const $q = useQuasar()
 
-const establishmentStore = useEstablishmentStore() // Store Pinia
-const authStore = useAuthStore() // Store Pinia
-const reservationStore = useReservationStore() // Store Pinia
+const establishmentStore = useEstablishmentStore()
+const authStore = useAuthStore()
+const reservationStore = useReservationStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -267,13 +267,14 @@ const goBack = () => {
 }
 
 const submitReservation = () => {
-  // console.log('Données de réservation :', reservation.value)
   // Logique d'envoi au backend ici
   reservationStore
     .activityReservation({
       establishmentId: activity.value._id,
       establishmentType: activity.value.type,
-      reservationDate: reservation.value.date,
+      reservationStartDate: reservation.value.date,
+      people: +reservation.value.people,
+      additionalInfo: reservation.value.additionalInfo,
       price: +reservation.value.people * +activity.value.price,
       ...reservation.value,
     })
@@ -289,7 +290,7 @@ const submitReservation = () => {
     .catch((error) => {
       $q.dialog({
         title: 'Réservation',
-        message: `Erreur lors de la réservation: ${error.message}`,
+        message: `Erreur lors de la réservation: ${error}`,
       })
     })
 }

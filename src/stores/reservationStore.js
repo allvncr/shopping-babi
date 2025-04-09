@@ -22,6 +22,7 @@ export const useReservationStore = defineStore('reservation', {
         await addToCart(useAuthStore().token, info)
       } catch (err) {
         this.error = err.response?.data?.message || 'Échec de la reservation. Essayez à nouveau.'
+        throw this.error
       }
     },
 

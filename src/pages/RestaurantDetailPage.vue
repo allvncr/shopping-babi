@@ -12,7 +12,7 @@
     </div>
 
     <!-- Détails du restaurant -->
-    <div>
+    <div class="q-mb-xl">
       <!-- Image principale -->
       <q-btn flat round dense icon="arrow_back" @click="goBack" class="back" />
       <q-carousel
@@ -225,10 +225,15 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useEstablishmentStore } from 'src/stores/establishmentStore'
 import { useAuthStore } from 'src/stores/authStore'
+import { useReservationStore } from 'src/stores/reservationStore'
 import L from 'leaflet'
+import { useQuasar } from 'quasar'
+const $q = useQuasar()
 
 const establishmentStore = useEstablishmentStore()
 const authStore = useAuthStore()
+const reservationStore = useReservationStore()
+
 const route = useRoute()
 const router = useRouter()
 
@@ -254,14 +259,38 @@ const goBack = () => {
 }
 
 const onReserve = () => {
-  console.log('Réserver une table')
   showReservationPopup.value = true
 }
 
 const submitReservation = () => {
-  console.log('Données de réservation :', reservation.value)
   showReservationPopup.value = false
   // Logique d'envoi au backend ici
+  reservationStore
+    .activityReservation({
+      establishmentId: restaurant.value._id,
+      establishmentType: restaurant.value.type,
+      reservationStartDate: reservation.value.date,
+      reservationStartTime: reservation.value.time,
+      people: +reservation.value.people,
+      additionalInfo: reservation.value.additionalInfo,
+      price: 0,
+      ...reservation.value,
+    })
+    .then(() => {
+      showReservationPopup.value = false
+      $q.dialog({
+        title: 'Réservation',
+        message: 'Réservation réussie!',
+      }).onOk(() => {
+        router.push('/panier')
+      })
+    })
+    .catch((error) => {
+      $q.dialog({
+        title: 'Réservation',
+        message: `Erreur lors de la réservation: ${error}`,
+      })
+    })
 }
 
 const createFavoris = () => {

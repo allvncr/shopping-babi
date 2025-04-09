@@ -249,7 +249,8 @@ const submitReservation = () => {
     .activityReservation({
       establishmentId: hotel.value._id,
       establishmentType: hotel.value.type, // "MaisonDeVacance"
-      reservationDate: reservation.value.startDate,
+      reservationStartDate: reservation.value.startDate,
+      additionalInfo: reservation.value.additionalInfo,
       price: totalPrice,
       ...reservation.value,
     })
@@ -265,7 +266,7 @@ const submitReservation = () => {
     .catch((error) => {
       $q.dialog({
         title: 'Erreur',
-        message: `Une erreur est survenue : ${error.message}`,
+        message: `Une erreur est survenue : ${error}`,
       })
     })
 }

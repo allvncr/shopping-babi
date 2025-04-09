@@ -9,6 +9,7 @@ import {
   getFavoris,
   deleteFavoris,
   addFavoris,
+  getParkings,
 } from 'src/services/establishmentService'
 import { useAuthStore } from './authStore'
 
@@ -22,6 +23,7 @@ export const useEstablishmentStore = defineStore('establishment', {
     restaurant: null,
     hotel: null,
     parking: null,
+    parkings: [],
   }),
 
   actions: {
@@ -154,6 +156,21 @@ export const useEstablishmentStore = defineStore('establishment', {
 
       try {
         await deleteFavoris(useAuthStore().token, favoris) // Appel au service
+      } catch (err) {
+        this.error =
+          err.response?.data?.message || 'Erreur lors de la récupération des établissements.'
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async fetchParkings(searchQuery = '') {
+      this.loading = true
+      this.error = null
+
+      try {
+        const response = await getParkings(searchQuery) // Appel au service
+        this.parkings = response.data.activities // Met à jour la liste
       } catch (err) {
         this.error =
           err.response?.data?.message || 'Erreur lors de la récupération des établissements.'

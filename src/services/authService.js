@@ -15,3 +15,27 @@ export const updateUser = async (token, userData) => {
     },
   })
 }
+
+export const getAllUsers = async (token) => {
+  return await api.get('auth/users', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const updateUserByID = async (token, userData) => {
+  return await api.patch('auth/users/' + userData.id, userData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}
+
+export const deleteUserByID = async (token, ID) => {
+  return await api.delete('auth/users/' + ID, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}

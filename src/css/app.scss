@@ -33,6 +33,7 @@ body {
   font-family: $body-font-family;
   max-width: 768px;
   margin: 0 auto;
+  background-color: rgba($color: $primary, $alpha: 0.2);
 }
 
 .q-tab {
@@ -47,4 +48,9 @@ body {
 
 .q-item__section--main {
   flex: auto;
+}
+
+.q-chip__content {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

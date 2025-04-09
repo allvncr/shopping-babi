@@ -5,26 +5,12 @@ export const getEstablishments = async (searchQuery = '') => {
   return await api.get('/establishments', { params })
 }
 
-// Obtenir toutes les activités ou effectuer une recherche par nom
-export const getActivities = async (searchQuery = '') => {
-  const params = searchQuery ? { name: searchQuery } : {}
-  return await api.get('/establishments/activities', { params })
-}
-
-export const fetchActivityBySlug = async (slug) => {
-  return await api.get(`/establishments/activities/${slug}`)
-}
-
 export const fetchRestaurantBySlug = async (slug) => {
   return await api.get(`/establishments/restaurants/${slug}`)
 }
 
 export const fetchHotelBySlug = async (slug) => {
   return await api.get(`/establishments/hotels/${slug}`)
-}
-
-export const fetchParkingBySlug = async (slug) => {
-  return await api.get(`/establishments/parkings/${slug}`)
 }
 
 export const getFavoris = async (token) => {

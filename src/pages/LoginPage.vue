@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex flex-center bg-grey-2">
+  <q-page class="flex flex-center">
     <q-card class="q-pa-md shadow-2 rounded-borders">
       <img src="../assets/images/logo_officiel.png" alt="" class="logoEta" />
       <q-card-section>
@@ -50,13 +50,6 @@
             />
           </div>
         </q-form>
-      </q-card-section>
-
-      <q-card-section class="text-center">
-        <div class="q-mt-md">
-          Vous n'avez pas de compte ?
-          <a href="/register" class="text-primary text-bold">S'inscrire</a>
-        </div>
       </q-card-section>
     </q-card>
     <q-banner v-if="authStore.error" class="q-mt-md" color="negative">

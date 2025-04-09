@@ -1,185 +1,119 @@
 <template>
-  <q-page class="q-pa-md">
-    <!-- Header -->
-    <q-header class="bg-white text-dark q-pa-sm">
-      <q-toolbar>
-        <div class="row" style="width: 100%; justify-content: space-between">
-          <div class="col-8 text-h6">
-            <img src="../assets/images/logo_officiel.png" alt="" class="logoEta" />
-          </div>
-        </div>
-      </q-toolbar>
-    </q-header>
+  <q-page class="bg-grey-2">
+    <q-toolbar class="bg-primary text-white">
+      <q-toolbar-title>Bienvenue, {{ authStore.user.firstname }} !</q-toolbar-title>
+      <q-btn flat @click="logout" label="Déconnexion" class="text-white" />
+    </q-toolbar>
 
-    <!-- Hero Section avec Carousel -->
-    <q-carousel animated v-model="slide" arrows navigation infinite height="250px">
-      <q-carousel-slide
-        :name="1"
-        img-src="https://shoppingababi.com/wp-content/uploads/2024/09/image-AM-423-424-page-72-73-scaled.jpg"
-      />
-      <q-carousel-slide :name="2" img-src="https://cdn.quasar.dev/img/mountains.jpg" />
-      <q-carousel-slide :name="3" img-src="https://cdn.quasar.dev/img/parallax1.jpg" />
-      <q-carousel-slide :name="4" img-src="https://cdn.quasar.dev/img/parallax2.jpg" />
-    </q-carousel>
-
-    <!-- Bannière sous le carrousel -->
-    <!-- <div class="q-my-md banner row justify-around q-gutter-md q-gutter-sm">
-      <img src="../assets/images/Hotel.png" alt="" class="logoEta" @click="goToHotels" />
-      <img src="../assets/images/Resto.png" alt="" class="logoEta" @click="goToRestaurants" />
-      <img src="../assets/images/Auto.png" alt="" class="logoEta" @click="goToActivities" />
-      <img src="../assets/images/Activite.png" alt="" class="logoEta" @click="goToParkings" />
-    </div> -->
-
-    <!-- Section Nos Hôtels -->
-    <div class="q-my-lg">
-      <div class="text-h5 text-weight-bold q-mb-md">
-        <img src="../assets/images/Hotel.png" alt="" class="logoEta" />
-      </div>
-      <q-card
-        v-for="(hotel, i) in filterByType('hotel').slice(0, 4)"
-        :key="i"
-        class="my-card q-mb-md border no-box-shadow"
-        @click="viewDetails(hotel)"
-      >
-        <img :src="hotel.images[0]" alt="Image" class="activity-image" />
-        <q-card-section>
-          <div class="text-weight-bold">{{ hotel.name }}</div>
-          <div class="text-caption text-secondary">
-            {{ hotel.location.city }}, {{ hotel.location.address }}
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-btn label="Voir plus d'hôtels" color="primary" flat @click="goToHotels" />
-    </div>
-
-    <!-- Section Nos Restaurants -->
-    <div class="q-my-lg">
-      <div class="text-h5 text-weight-bold q-mb-md">
-        <img src="../assets/images/Resto.png" alt="" class="logoEta" />
-      </div>
-      <q-card
-        v-for="(restaurant, i) in filterByType('restaurant').slice(0, 4)"
-        :key="i"
-        class="my-card q-mb-md border no-box-shadow"
-        @click="viewDetails(restaurant)"
-      >
-        <img :src="restaurant.images[0]" alt="Image" class="activity-image" />
-        <q-card-section>
-          <div class="text-weight-bold">{{ restaurant.name }}</div>
-          <div class="text-caption text-secondary">
-            {{ restaurant.location.city }}, {{ restaurant.location.address }}
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-btn label="Voir plus de restaurants" color="primary" flat @click="goToRestaurants" />
-    </div>
-
-    <!-- Section Nos Parkings -->
-    <div class="q-my-lg">
-      <div class="text-h5 text-weight-bold q-mb-md">
-        <img src="../assets/images/Auto.png" alt="" class="logoEta" />
-      </div>
-      <q-card
-        v-for="(parking, i) in filterByType('parking').slice(0, 4)"
-        :key="i"
-        class="my-card q-mb-md border no-box-shadow"
-        @click="viewDetails(parking)"
-      >
-        <img :src="parking.images[0]" alt="Image" class="activity-image" />
-        <q-card-section>
-          <div class="text-weight-bold">{{ parking.name }}</div>
-          <div class="text-caption text-secondary">
-            {{ parking.location.city }}, {{ parking.location.address }}
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-btn label="Voir plus de parkings" color="primary" flat @click="goToParkings" />
-    </div>
-
-    <!-- Section Nos Activités -->
-    <div class="q-my-lg">
-      <div class="text-h5 text-weight-bold q-mb-md">
-        <img src="../assets/images/Activite.png" alt="" class="logoEta" />
-      </div>
-      <q-card
-        v-for="(activity, i) in filterByType('activity').slice(0, 4)"
-        :key="i"
-        class="my-card q-mb-md border no-box-shadow"
-        @click="viewDetails(activity)"
-      >
-        <img :src="activity.images[0]" alt="Image" class="activity-image" />
-        <q-card-section>
-          <div class="text-weight-bold">{{ activity.name }}</div>
-          <div class="text-caption text-secondary">
-            {{ activity.location.city }}, {{ activity.location.address }}
-          </div>
-        </q-card-section>
-      </q-card>
-      <q-btn label="Voir plus d'activités" color="primary" flat @click="goToActivities" />
-    </div>
-
-    <!-- Footer -->
-    <q-footer class="bg-grey-2 q-pa-sm text-center">
-      <p>ReservaBabi - 2025 © | Fièrement développé avec le Quasar Framework</p>
-    </q-footer>
+    <q-card-section class="q-pa-md">
+      <q-grid cols="2" gutter="16px">
+        <q-col v-for="card in filteredCards" :key="card.label">
+          <q-card class="hover-card q-mb-md" bordered @click="navigateTo(card.route)">
+            <q-card-section class="text-center">
+              <img :src="card.image" width="104px" alt="" />
+              <div class="text-h6 q-mt-sm">{{ card.label }}</div>
+            </q-card-section>
+          </q-card>
+        </q-col>
+      </q-grid>
+    </q-card-section>
   </q-page>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { useAuthStore } from 'src/stores/authStore'
 import { useRouter } from 'vue-router'
-import { useEstablishmentStore } from 'src/stores/establishmentStore'
+import { computed } from 'vue'
 
+const authStore = useAuthStore()
 const router = useRouter()
-const establishmentStore = useEstablishmentStore()
 
-const slide = ref(1)
+const cards = [
+  {
+    label: 'Gestion Utilisateurs',
+    image: 'src/assets/images/welcome.png',
+    route: '/admin/users',
+    role: 'superAdmin', // Uniquement pour superAdmin
+  },
+  {
+    label: 'Gestion Hotels',
+    image: 'src/assets/images/Hotel.png',
+    route: '/admin/hotels',
+    type: 'Hotel',
+  },
+  {
+    label: 'Gestion Restaurants',
+    image: 'src/assets/images/Resto.png',
+    route: '/admin/restaurants',
+    type: 'Restaurant',
+  },
+  {
+    label: 'Gestion Activités',
+    image: 'src/assets/images/Activite.png',
+    route: '/admin/activities',
+    type: 'Activité',
+  },
+  {
+    label: 'Gestion Parkings',
+    image: 'src/assets/images/Auto.png',
+    route: '/admin/parkings',
+    type: 'Parking',
+  },
+  {
+    label: 'Gestion Réservations',
+    image: 'src/assets/images/membership.png',
+    route: '/admin/reservations',
+  },
+]
 
-onMounted(() => {
-  establishmentStore.fetchEstablishments()
+// Filtrer les cartes selon le rôle et les types d'établissements
+const filteredCards = computed(() => {
+  if (authStore.user.role === 'superAdmin') {
+    // Le superAdmin voit tout
+    return cards
+  }
+
+  if (authStore.user.role === 'proprio') {
+    // Le proprio ne voit que les cartes sans rôle et celles qu'il peut modifier
+    return cards.filter((card) => {
+      return !card.role && (!card.type || authStore.user.establishmentTypes?.includes(card.type))
+    })
+  }
+
+  // Les autres rôles ne voient rien pour le moment
+  return []
 })
 
-const filterByType = (type) => {
-  return establishmentStore.establishments.filter((establishment) => establishment.type === type)
+// Navigation
+function navigateTo(route) {
+  if (route) router.push(route)
 }
 
-const viewDetails = (establishment) => {
-  router.push(`/${establishment.type}/${establishment.slug}`)
+// Déconnexion
+function logout() {
+  authStore.logout()
 }
-
-const goToHotels = () => router.push('/search?type=hotels')
-const goToRestaurants = () => router.push('/search?type=restaurants')
-const goToParkings = () => router.push('/search?type=parkings')
-const goToActivities = () => router.push('/search?type=activities')
 </script>
 
-<style lang="scss" scoped>
-.activity-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 10px;
+<style scoped>
+.q-toolbar {
+  padding: 0 1rem;
 }
 
-.my-card {
-  overflow: hidden;
-  border-radius: 10px;
+.q-toolbar__title {
+  font-size: 14px;
 }
-
-.q-btn {
-  border-radius: 30px;
+.q-grid {
+  display: grid;
+  gap: 1rem;
 }
-
-.text-shadow {
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+.hover-card {
+  cursor: pointer;
+  transition: all 0.3s;
+  border-radius: 12px;
+  padding: 1rem;
 }
-
-.q-carousel-slide {
-  position: relative;
-  text-align: center;
-}
-
-.logoEta {
-  width: 144px;
+.hover-card:hover {
+  background-color: var(--q-color-primary-light);
 }
 </style>

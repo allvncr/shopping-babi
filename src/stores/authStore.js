@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
         this.error = null // Réinitialiser les erreurs
       } catch (err) {
         this.error = err.response?.data?.message || 'Échec de la connexion. Essayez à nouveau.'
-        console.error(err)
+        throw this.error
       }
     },
 
@@ -29,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
         this.error = null // Réinitialiser les erreurs
       } catch (err) {
         this.error = err.response?.data?.message || 'Échec de l’inscription. Essayez à nouveau.'
-        console.error(err)
+        throw this.error
       }
     },
 
@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
         this.error =
           err.response?.data?.message ||
           'Échec de la mise à jour des informations utilisateur. Essayez à nouveau.'
-        console.error(err)
+        throw this.error
       }
     },
 

@@ -45,7 +45,8 @@
                   <div>{{ item.establishment.description }}</div>
                   <div><strong>Adresse:</strong> {{ item.establishment.location.address }}</div>
                   <div>
-                    <strong>Date de réservation:</strong> {{ formatDate(item.reservationDate) }}
+                    <strong>Date de réservation:</strong>
+                    {{ formatDate(item.reservationStartDate) }}
                   </div>
                   <div><strong>Prix:</strong> {{ formatCurrency(item.price) }}</div>
                 </div>

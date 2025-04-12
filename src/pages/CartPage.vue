@@ -30,7 +30,7 @@
             </div>
             <div class="text-caption text-grey">Prix : {{ item.price }} CFA</div>
             <div class="text-caption text-grey">
-              Date de réservation : {{ formatDate(item.reservationDate) }}
+              Date de réservation : {{ formatDate(item.reservationStartDate) }}
             </div>
           </div>
           <q-btn flat icon="delete" color="negative" @click.stop="removeItem(index)" />

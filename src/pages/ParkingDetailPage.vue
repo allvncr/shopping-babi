@@ -268,7 +268,11 @@ const submitReservation = () => {
     .activityReservation({
       establishmentId: parking.value._id,
       establishmentType: parking.value.type,
-      reservationDate: reservation.value.startDate,
+      reservationStartDate: reservation.value.startDate,
+      reservationStartTime: reservation.value.startTime,
+      reservationEndDate: reservation.value.endDate,
+      reservationEndTime: reservation.value.endTime,
+      additionalInfo: reservation.value.additionalInfo,
       price: calculateTotalHours() * +parking.value.pricePerHour,
       ...reservation.value,
     })
@@ -284,7 +288,7 @@ const submitReservation = () => {
     .catch((error) => {
       $q.dialog({
         title: 'Réservation',
-        message: `Erreur lors de la réservation: ${error.message}`,
+        message: `Erreur lors de la réservation: ${error}`,
       })
     })
 }

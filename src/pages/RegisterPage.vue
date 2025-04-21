@@ -82,11 +82,25 @@
             color="primary"
           />
 
+          <p class="error" v-if="authStore.error">{{ authStore.error }}</p>
+
           <div class="flex flex-center q-mt-md">
             <q-btn
+              v-if="!authStore.error"
               type="submit"
               :loading="loading"
               color="primary"
+              label="S'inscrire"
+              size="md"
+              :disabled="!agreeTerms"
+              unelevated
+              class="full-width"
+            />
+            <q-btn
+              v-else
+              type="submit"
+              :loading="loading"
+              color="red"
               label="S'inscrire"
               size="md"
               :disabled="!agreeTerms"
@@ -115,12 +129,12 @@ const loading = ref(false)
 const router = useRouter()
 
 const form = reactive({
-  firstname: '',
-  lastname: '',
-  tel: '',
-  email: '',
-  password: '',
-  confirmPassword: '',
+  firstname: 'bfa',
+  lastname: 'tv',
+  tel: '0102030406',
+  email: 'vianneyablo9@gmail.com',
+  password: '123456',
+  confirmPassword: '123456',
 })
 const agreeTerms = ref(false)
 const isPwd = ref(true)
@@ -161,5 +175,12 @@ const handleRegister = async () => {
 .logoEta {
   width: 144px;
   margin: auto;
+}
+
+.error {
+  color: red;
+  text-align: center;
+  font-size: 0.8rem;
+  margin-top: 10px;
 }
 </style>

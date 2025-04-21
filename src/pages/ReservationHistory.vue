@@ -66,15 +66,6 @@
             </q-badge>
 
             <!-- Bouton d'annulation en position absolue avec petite icône -->
-            <q-btn
-              v-if="reservation.status === 'EnCours'"
-              label="Annuler la reservation"
-              icon="cancel"
-              color="negative"
-              @click="cancelReservation(reservation._id)"
-              size="sm"
-              class="q-mt-md full-width"
-            />
           </q-card-actions>
         </q-card>
       </q-item>
@@ -87,8 +78,8 @@ import { ref, onMounted } from 'vue'
 import { format } from 'date-fns'
 import frLocale from 'date-fns/locale/fr'
 import { useReservationStore } from 'src/stores/reservationStore'
-import { useQuasar } from 'quasar'
-const $q = useQuasar()
+// import { useQuasar } from 'quasar'
+// const $q = useQuasar()
 
 const reservationStore = useReservationStore() // Store Pinia
 const reservations = ref([])
@@ -125,27 +116,27 @@ const getStatusColor = (status) => {
 }
 
 // Méthode pour annuler une réservation
-const cancelReservation = (reservationId) => {
-  reservationStore
-    .cancelReservation(reservationId)
-    .then(() => {
-      $q.dialog({
-        title: 'Réservation',
-        message: 'Réservation annulée avec succès!',
-      }).onOk(() => {
-        // Recharger les réservations
-        reservationStore.getReservations().then(() => {
-          reservations.value = reservationStore.reservations.map((reservation) => ({
-            ...reservation,
-            showDetails: false,
-          }))
-        })
-      })
-    })
-    .catch((error) => {
-      console.error("Erreur lors de l'annulation de la réservation:", error)
-    })
-}
+// const cancelReservation = (reservationId) => {
+//   reservationStore
+//     .cancelReservation(reservationId)
+//     .then(() => {
+//       $q.dialog({
+//         title: 'Réservation',
+//         message: 'Réservation annulée avec succès!',
+//       }).onOk(() => {
+//         // Recharger les réservations
+//         reservationStore.getReservations().then(() => {
+//           reservations.value = reservationStore.reservations.map((reservation) => ({
+//             ...reservation,
+//             showDetails: false,
+//           }))
+//         })
+//       })
+//     })
+//     .catch((error) => {
+//       console.error("Erreur lors de l'annulation de la réservation:", error)
+//     })
+// }
 </script>
 
 <style scoped>

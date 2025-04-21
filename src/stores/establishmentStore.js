@@ -9,7 +9,7 @@ import {
   getFavoris,
   deleteFavoris,
   addFavoris,
-  getParkings,
+  // getParkings,
 } from 'src/services/establishmentService'
 import { useAuthStore } from './authStore'
 
@@ -164,19 +164,19 @@ export const useEstablishmentStore = defineStore('establishment', {
       }
     },
 
-    async fetchParkings(searchQuery = '') {
-      this.loading = true
-      this.error = null
+    // async fetchParkings(searchQuery = '') {
+    //   this.loading = true
+    //   this.error = null
 
-      try {
-        const response = await getParkings(searchQuery) // Appel au service
-        this.parkings = response.data.activities // Met à jour la liste
-      } catch (err) {
-        this.error =
-          err.response?.data?.message || 'Erreur lors de la récupération des établissements.'
-      } finally {
-        this.loading = false
-      }
-    },
+    //   try {
+    //     const response = await getParkings(searchQuery) // Appel au service
+    //     this.parkings = response.data.activities // Met à jour la liste
+    //   } catch (err) {
+    //     this.error =
+    //       err.response?.data?.message || 'Erreur lors de la récupération des établissements.'
+    //   } finally {
+    //     this.loading = false
+    //   }
+    // },
   },
 })

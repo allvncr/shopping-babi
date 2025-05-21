@@ -129,12 +129,12 @@ const loading = ref(false)
 const router = useRouter()
 
 const form = reactive({
-  firstname: 'bfa',
-  lastname: 'tv',
-  tel: '0102030406',
-  email: 'vianneyablo9@gmail.com',
-  password: '123456',
-  confirmPassword: '123456',
+  firstname: '',
+  lastname: '',
+  tel: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
 })
 const agreeTerms = ref(false)
 const isPwd = ref(true)

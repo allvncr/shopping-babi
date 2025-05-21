@@ -47,3 +47,11 @@ export const cancelReservation = async (token, reservationID) => {
     },
   })
 }
+
+export const initierPaiement = async (token, data) => {
+  return await api.post('payment/initier-paiement', data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+}

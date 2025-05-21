@@ -6,6 +6,7 @@ import {
   createReservation,
   getReservationsByUser,
   cancelReservation,
+  initierPaiement,
 } from 'src/services/reservationService'
 import { useAuthStore } from './authStore'
 
@@ -75,6 +76,17 @@ export const useReservationStore = defineStore('reservation', {
         this.error =
           err.response?.data?.message ||
           "Échec de l'annulation de la reservation. Essayez à nouveau."
+      }
+    },
+
+    async makePayment(data) {
+      try {
+        const response = await initierPaiement(useAuthStore().token, data)
+        return response.data.payment_url
+      } catch (err) {
+        this.error =
+          err.response?.data?.message || 'Échec lors de la reservation. Essayez à nouveau.'
+        throw this.error
       }
     },
   },

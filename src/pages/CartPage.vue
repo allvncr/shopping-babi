@@ -61,10 +61,12 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useReservationStore } from 'src/stores/reservationStore'
-import { useQuasar } from 'quasar'
 const $q = useQuasar()
+import { useQuasar } from 'quasar'
+import { useAuthStore } from 'src/stores/authStore'
 
 const reservationStore = useReservationStore() // Store Pinia
+const authStore = useAuthStore() // Store Pinia
 
 const cart = ref(null)
 
@@ -88,18 +90,29 @@ const removeItem = (index) => {
     cart.value.totalPrice = cart.value.items.reduce((total, item) => total + item.price, 0)
   })
 }
-const checkout = () => {
-  reservationStore.checkout().then(() => {
-    cart.value.items = []
-    cart.value.totalPrice = 0
-    $q.dialog({
-      title: 'Réservation',
-      message: 'Réservation réussie!',
-    }).onOk(() => {
-      router.push('/reservation-history')
+const checkout = async () => {
+  try {
+    // Étape 1 – Créer la réservation côté backend
+    // await reservationStore.checkout()
+
+    // Étape 2 – Appel backend pour initier le paiement FedaPay
+    const paymentUrl = await reservationStore.makePayment({
+      amount: cart.value.totalPrice,
+      customer_name: authStore.user.lastname + ' ' + authStore.user.firstname,
+      customer_email: authStore.user.email,
     })
-  })
+
+    // Étape 3 – Redirection vers la page de paiement FedaPay
+    window.location.href = paymentUrl
+  } catch (error) {
+    console.error('Erreur lors du paiement :', error)
+    $q.dialog({
+      title: 'Erreur',
+      message: 'Une erreur est survenue lors de la réservation ou du paiement.',
+    })
+  }
 }
+
 const formatDate = (date) =>
   new Date(date).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' })
 
